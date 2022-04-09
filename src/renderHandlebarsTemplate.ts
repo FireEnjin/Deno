@@ -7,8 +7,14 @@ export default async function renderHandlebarsTemplate(
   payload?: any
 ) {
   const template = await db.find("templates", templateId);
+  let renderedHTML = "";
+  try {
+    renderedHTML = (HandlebarsJS as any).compile(
+      (template?.html || "").replace(new RegExp("{{&gt;", "g"), "{{>")
+    )(payload || {});
+  } catch (err) {
+    console.log(err);
+  }
 
-  return (HandlebarsJS as any).compile(
-    (template?.html || "").replace(new RegExp("{{&gt;", "g"), "{{>")
-  )(payload || {});
+  return renderedHTML;
 }
