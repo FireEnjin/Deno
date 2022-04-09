@@ -1,7 +1,9 @@
 import "https://deno.land/x/xhr@0.1.1/mod.ts";
 import { installGlobals } from "https://deno.land/x/virtualstorage@0.1.0/mod.ts";
-import { serve } from "https://deno.land/std@0.125.0/http/server.ts";
+import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 import Database from "./database.ts";
+import getTemplate from "./routes/getTemplate.ts";
+import routeHtml from "./routeHtml.ts";
 installGlobals();
 
 const db = new Database({
@@ -16,14 +18,12 @@ const db = new Database({
     measurementId: "G-04DJ99NMQH",
   },
 });
-
-console.log("http://localhost:8000/");
-serve(
-  async (req: Request) => {
-    console.log(await db.find("templates", "test"));
-    //await db.collection("templates").doc("test").get());
-
-    return new Response("Hello World\n");
-  },
-  { port: 8000 }
+const app = new Application();
+const router = new Router();
+router.get(
+  "/",
+  routeHtml(db, async () => "Hello World\n")
 );
+router.get("/template/:templateId", routeHtml(db, getTemplate));
+app.use(router.routes());
+app.listen({ port: 8000 });
