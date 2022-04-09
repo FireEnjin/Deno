@@ -1,44 +1,25 @@
-import admin from "https://cdn.skypack.dev/firebase-admin";
-import * as fireorm from "https://cdn.skypack.dev/fireorm";
+import { initializeApp } from "https://cdn.skypack.dev/@firebase/app";
+import { getFirestore } from "https://cdn.skypack.dev/@firebase/firestore";
 
-export default function connect(options?: {
-  serviceAccount?: string | boolean;
-  emulate?: boolean;
-  host?: string;
-  ssl?: string;
-  ignoreUndefinedProperties?: boolean;
-  projectId?: string;
-}) {
-  const appConfig: admin.AppOptions = {};
-  if (
-    !!options?.emulate ||
-    options?.projectId ||
-    process?.env?.GCLOUD_PROJECT
-  ) {
-    appConfig.projectId = options?.projectId || process.env.GCLOUD_PROJECT;
-  }
-  if (options?.serviceAccount) {
-    const serviceAccount = require(typeof options?.serviceAccount === "string"
-      ? options.serviceAccount
-      : `${process.cwd()}/service-account.json`);
-    appConfig.credential = admin.credential.cert(serviceAccount);
-    appConfig.databaseURL = `https://${serviceAccount.project_id}.firebaseio.com`;
-    appConfig.storageBucket = `${serviceAccount.project_id}.appspot.com`;
-  }
-  admin.initializeApp(appConfig);
-
-  const firestore = admin.firestore();
-  const firebaseConfig: FirebaseFirestore.Settings = {
-    ignoreUndefinedProperties:
-      options?.ignoreUndefinedProperties === false ? false : true,
+export default async function connect(options?: {
+  app?: any;
+  config?: {
+    apiKey: string;
+    authDomain: string;
+    projectId: string;
+    storageBucket: string;
+    messagingSenderId: string;
+    appId: string;
   };
-  if (options?.emulate) {
-    firebaseConfig.host = options?.host || "localhost:8080";
-    firebaseConfig.ssl = !!options?.ssl;
+}) {
+  let app = null;
+  try {
+    app = options?.app || initializeApp(options?.config);
+    console.log("Initializing Firebase App...");
+  } catch (e) {
+    console.log(e);
   }
-
-  firestore.settings(firebaseConfig);
-  fireorm.initialize(firestore);
+  const firestore = getFirestore(app);
 
   return firestore;
 }
