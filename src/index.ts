@@ -8,14 +8,14 @@ installGlobals();
 
 const db = new Database({
   config: {
-    apiKey: "AIzaSyCnvI_B2nolJRcMfCL8RnsvC5aKkNEL7sU",
-    authDomain: "fireenjin-mx.firebaseapp.com",
-    databaseURL: "https://fireenjin-mx-default-rtdb.firebaseio.com",
-    projectId: "fireenjin-mx",
-    storageBucket: "fireenjin-mx.appspot.com",
-    messagingSenderId: "823412030856",
-    appId: "1:823412030856:web:0e0b2ae046ef913b4e4e3d",
-    measurementId: "G-04DJ99NMQH",
+    apiKey: "AIzaSyAz5C9TRxQ9bUkTwVaD6Yc-Iisw57UslPM",
+    authDomain: "fireenjin-live.firebaseapp.com",
+    databaseURL: "https://fireenjin-live.firebaseio.com",
+    projectId: "fireenjin-live",
+    storageBucket: "fireenjin-live.appspot.com",
+    messagingSenderId: "756564610596",
+    appId: "1:756564610596:web:4fdf5a6ddfd319a93392b1",
+    measurementId: "G-Q0ZHGFCQFN",
   },
 });
 const app = new Application();
