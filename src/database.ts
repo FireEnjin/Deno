@@ -7,6 +7,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  initializeFirestore,
   query as firestoreQuery,
   orderBy as firestoreOrderBy,
   limit as firestoreLimit,
@@ -14,7 +15,6 @@ import {
   setDoc,
   updateDoc,
   onSnapshot,
-  enableIndexedDbPersistence,
   connectFirestoreEmulator,
 } from "https://cdn.skypack.dev/@firebase/firestore";
 import {
@@ -39,6 +39,9 @@ export default class Database {
         console.log(e);
       }
     }
+    initializeFirestore(this.app, {
+      ignoreUndefinedProperties: true,
+    });
     this.service = getFirestore(this.app);
     this.functions = getFunctions(this.app);
     if (options?.emulate) {
